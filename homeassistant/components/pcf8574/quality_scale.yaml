@@ -1,23 +1,25 @@
 rules:
   # Bronze
-  action-setup: todo
-  appropriate-polling: todo
-  brands: todo
-  common-modules: todo
+  action-setup: done
+  appropriate-polling: done
+  brands:
+    status: exempt
+    comment: No brand specific code.
+  common-modules: done
   config-flow-test-coverage: todo
-  config-flow: todo
-  dependency-transparency: todo
-  docs-actions: todo
-  docs-high-level-description: todo
+  config-flow: done
+  dependency-transparency: done
+  docs-actions: done
+  docs-high-level-description: done
   docs-installation-instructions: todo
   docs-removal-instructions: todo
-  entity-event-setup: todo
-  entity-unique-id: todo
-  has-entity-name: todo
-  runtime-data: todo
+  entity-event-setup: done
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
   test-before-configure: todo
   test-before-setup: todo
-  unique-config-entry: todo
+  unique-config-entry: done
 
   # Silver
   action-exceptions: todo
