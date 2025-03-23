@@ -30,7 +30,7 @@ _SWITCHES_SCHEMA = vol.Schema(
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_PINS): cv.ensure_list(_SWITCHES_SCHEMA),
+        vol.Required(CONF_PINS): cv.positive_int,
         vol.Optional(CONF_I2C_ADDRESS, default=DEFAULT_I2C_ADDRESS): vol.All(
             int, vol.Range(min=0x20, max=0x27)
         ),

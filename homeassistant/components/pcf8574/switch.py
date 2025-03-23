@@ -32,7 +32,9 @@ async def async_setup_platform(
         pcf = entry.runtime_data
 
         pins = config[CONF_PINS]
-        for pin_num, pin_name in pins.items():
+        for pin in pins.items():
+            pin_name = pin["name"]
+            pin_num = pin["pin"]
             switches.append(PCF8574Switch(pin_name, pin_num, pcf))
             _LOGGER.debug(
                 "async_setup_platform: pin_name=%s, pin_num=%s", pin_name, pin_num
