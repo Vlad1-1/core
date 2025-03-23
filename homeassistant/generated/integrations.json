@@ -4725,6 +4725,12 @@
       "config_flow": false,
       "iot_class": "local_polling"
     },
+    "pcf8574": {
+      "name": "PCF8574 I/O Expander",
+      "integration_type": "hub",
+      "config_flow": true,
+      "iot_class": "calculated"
+    },
     "pcs_lighting": {
       "name": "PCS Lighting",
       "integration_type": "virtual",

@@ -24,15 +24,17 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-_SWITCHES_SCHEMA = vol.Schema({range(8): cv.string})
+_SWITCHES_SCHEMA = vol.Schema({cv.positive_int: cv.string})
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_PINS): [_SWITCHES_SCHEMA],
+        vol.Required(CONF_PINS): _SWITCHES_SCHEMA,
         vol.Optional(CONF_I2C_ADDRESS, default=DEFAULT_I2C_ADDRESS): vol.All(
             int, vol.Range(min=0x20, max=0x27)
         ),
-        vol.Optional(CONF_I2C_BUS, default=DEFAULT_I2C_BUS): range(1),
+        vol.Optional(CONF_I2C_BUS, default=DEFAULT_I2C_BUS): vol.All(
+            int, vol.Range(min=0, max=1)
+        ),
     }
 )
 

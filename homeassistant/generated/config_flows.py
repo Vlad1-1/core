@@ -464,6 +464,7 @@ FLOWS = {
         "p1_monitor",
         "palazzetti",
         "panasonic_viera",
+        "pcf8574",
         "peblar",
         "peco",
         "pegel_online",

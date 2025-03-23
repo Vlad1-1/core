@@ -1130,6 +1130,8 @@ build.json @home-assistant/supervisor
 /tests/components/palazzetti/ @dotvav
 /homeassistant/components/panel_custom/ @home-assistant/frontend
 /tests/components/panel_custom/ @home-assistant/frontend
+/homeassistant/components/pcf8574/ @Vlad1-1
+/tests/components/pcf8574/ @Vlad1-1
 /homeassistant/components/peblar/ @frenck
 /tests/components/peblar/ @frenck
 /homeassistant/components/peco/ @IceBotYT

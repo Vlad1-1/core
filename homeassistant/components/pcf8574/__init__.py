@@ -9,6 +9,7 @@ from pcf8574 import PCF8574
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryError
 
 from .const import CONF_I2C_ADDRESS, CONF_I2C_BUS, DOMAIN
 
@@ -27,15 +28,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: PCFConfigEntry) -> bool:
         _LOGGER.error(
             "Invalid I2C address for PCF8574: %s", entry.data[CONF_I2C_ADDRESS]
         )
-        return False
+        raise ConfigEntryError("Invalid I2C address")
 
     try:
         entry.runtime_data = await hass.async_add_executor_job(
             PCF8574, entry.data[CONF_I2C_BUS], entry.data[CONF_I2C_ADDRESS]
         )
     except OSError as e:
-        _LOGGER.error("Error setting up PCF8574: %s", str(e))
-        return False
+        _LOGGER.error("Error setting up: %s", str(e))
+        raise ConfigEntryError("Could not open i2c bus") from e
 
     entry.unique_id = DOMAIN
 
