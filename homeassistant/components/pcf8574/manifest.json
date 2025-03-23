@@ -1,0 +1,14 @@
+{
+  "domain": "pcf8574",
+  "name": "PCF8574 I/O Expander",
+  "codeowners": ["@Vlad1-1"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/pcf8574",
+  "homekit": {},
+  "iot_class": "calculated",
+  "quality_scale": "bronze",
+  "requirements": ["pcf8574==0.5.0"],
+  "ssdp": [],
+  "zeroconf": []
+}
