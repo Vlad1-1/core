@@ -5,40 +5,36 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from pcf8574 import PCF8574
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
+import homeassistant.helpers.config_validation as cv
 
-from .const import DOMAIN
+from .const import (
+    CONF_I2C_ADDRESS,
+    CONF_I2C_BUS,
+    CONF_PINS,
+    DEFAULT_I2C_ADDRESS,
+    DEFAULT_I2C_BUS,
+    DOMAIN,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
-# TODO adjust the data schema to the data that you need
+_SWITCHES_SCHEMA = vol.Schema({range(8): cv.string})
+
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_HOST): str,
-        vol.Required(CONF_USERNAME): str,
-        vol.Required(CONF_PASSWORD): str,
+        vol.Required(CONF_PINS): [_SWITCHES_SCHEMA],
+        vol.Optional(CONF_I2C_ADDRESS, default=DEFAULT_I2C_ADDRESS): vol.All(
+            int, vol.Range(min=0x20, max=0x27)
+        ),
+        vol.Optional(CONF_I2C_BUS, default=DEFAULT_I2C_BUS): range(1),
     }
 )
-
-
-class PlaceholderHub:
-    """Placeholder class to make tests pass.
-
-    TODO Remove this placeholder class and replace with things from your PyPI package.
-    """
-
-    def __init__(self, host: str) -> None:
-        """Initialize."""
-        self.host = host
-
-    async def authenticate(self, username: str, password: str) -> bool:
-        """Test if we can authenticate with the host."""
-        return True
 
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
@@ -46,7 +42,6 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
-    # TODO validate the data can be used to set up a connection.
 
     # If your PyPI package is not built with async, pass your methods
     # to the executor:
@@ -54,10 +49,12 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     #     your_validate_func, data[CONF_USERNAME], data[CONF_PASSWORD]
     # )
 
-    hub = PlaceholderHub(data[CONF_HOST])
-
-    if not await hub.authenticate(data[CONF_USERNAME], data[CONF_PASSWORD]):
-        raise InvalidAuth
+    try:
+        await hass.async_add_executor_job(
+            PCF8574, data[CONF_I2C_BUS], data[CONF_I2C_ADDRESS]
+        )
+    except OSError as e:
+        raise InvalidI2CBus from e
 
     # If you cannot connect:
     # throw CannotConnect
@@ -68,7 +65,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     return {"title": "Name of the device"}
 
 
-class ConfigFlow(ConfigFlow, domain=DOMAIN):
+class PCFConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for PCF8574 I/O Expander."""
 
     VERSION = 1
@@ -81,10 +78,8 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 info = await validate_input(self.hass, user_input)
-            except CannotConnect:
-                errors["base"] = "cannot_connect"
-            except InvalidAuth:
-                errors["base"] = "invalid_auth"
+            except InvalidI2CBus:
+                errors["base"] = "invalid_i2c_bus"
             except Exception:
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
@@ -96,9 +91,5 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
 
-class CannotConnect(HomeAssistantError):
-    """Error to indicate we cannot connect."""
-
-
-class InvalidAuth(HomeAssistantError):
-    """Error to indicate there is invalid auth."""
+class InvalidI2CBus(HomeAssistantError):
+    """Error to indicate there is an invalid I2C bus."""

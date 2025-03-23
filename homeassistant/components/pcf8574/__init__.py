@@ -2,34 +2,48 @@
 
 from __future__ import annotations
 
+import logging
+
+from pcf8574 import PCF8574
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-# TODO List the platforms that you want to support.
+from .const import CONF_I2C_ADDRESS, CONF_I2C_BUS, DOMAIN
+
 # For your initial PR, limit it to 1 platform.
-_PLATFORMS: list[Platform] = [Platform.LIGHT]
+_PLATFORMS: list[Platform] = [Platform.SWITCH]
 
-# TODO Create ConfigEntry type alias with API object
-# TODO Rename type alias and update all entry annotations
-type New_NameConfigEntry = ConfigEntry[MyApi]  # noqa: F821
+type PCFConfigEntry = ConfigEntry[PCF8574]
+
+_LOGGER = logging.getLogger(__name__)
 
 
-# TODO Update entry annotation
-async def async_setup_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: PCFConfigEntry) -> bool:
     """Set up PCF8574 I/O Expander from a config entry."""
 
-    # TODO 1. Create API instance
-    # TODO 2. Validate the API connection (and authentication)
-    # TODO 3. Store an API object for your platforms to access
-    # entry.runtime_data = MyAPI(...)
+    if entry.data[CONF_I2C_ADDRESS] not in range(0x20, 0x28):
+        _LOGGER.error(
+            "Invalid I2C address for PCF8574: %s", entry.data[CONF_I2C_ADDRESS]
+        )
+        return False
+
+    try:
+        entry.runtime_data = await hass.async_add_executor_job(
+            PCF8574, entry.data[CONF_I2C_BUS], entry.data[CONF_I2C_ADDRESS]
+        )
+    except OSError as e:
+        _LOGGER.error("Error setting up PCF8574: %s", str(e))
+        return False
+
+    entry.unique_id = DOMAIN
 
     await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
 
     return True
 
 
-# TODO Update entry annotation
-async def async_unload_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: PCFConfigEntry) -> bool:
     """Unload a config entry."""
     return await hass.config_entries.async_unload_platforms(entry, _PLATFORMS)
