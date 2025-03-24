@@ -8,41 +8,34 @@ from pcf8574 import PCF8574
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import CONF_PINS, DOMAIN
+from .const import CONF_PIN_NAME, CONF_PIN_NUMBER
 
 _LOGGER = logging.getLogger(__name__)
-type PCFConfigEntry = ConfigEntry[PCF8574]
 
 
-async def async_setup_platform(
+async def async_setup_entry(
     hass: HomeAssistant,
-    config: ConfigType,
-    add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,
+    entry: ConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the PCF8574 switch platform."""
+    pcf = entry.runtime_data
 
-    switches = []
-    entry = hass.config_entries.async_get_entry(DOMAIN)
+    switch_entity = PCF8574Switch(
+        entry.data[CONF_PIN_NAME], entry.data[CONF_PIN_NUMBER], pcf
+    )
+    _ENTITIES[entry.entry_id] = switch_entity
+    async_add_entities([switch_entity])
 
-    if isinstance(entry, ConfigEntry):
-        pcf = entry.runtime_data
 
-        pins = config[CONF_PINS]
-        for pin in pins.items():
-            pin_name = pin["name"]
-            pin_num = pin["pin"]
-            switches.append(PCF8574Switch(pin_name, pin_num, pcf))
-            _LOGGER.debug(
-                "async_setup_platform: pin_name=%s, pin_num=%s", pin_name, pin_num
-            )
-
-        add_entities(switches)
-    else:
-        _LOGGER.error("Couldn't find config entry")
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload config entry and remove the switch entity."""
+    entity = _ENTITIES.pop(entry.entry_id)
+    await entity.async_turn_off()
+    await entity.async_remove()
+    return True
 
 
 class PCF8574Switch(SwitchEntity):
@@ -79,3 +72,6 @@ class PCF8574Switch(SwitchEntity):
         self._state = state
         self._pcf.set_output(self._pin_num, state)
         self.schedule_update_ha_state()
+
+
+_ENTITIES: dict[str, PCF8574Switch] = {}
