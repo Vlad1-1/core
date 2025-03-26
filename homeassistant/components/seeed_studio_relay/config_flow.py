@@ -13,7 +13,6 @@ from homeassistant.exceptions import HomeAssistantError
 import homeassistant.helpers.config_validation as cv
 
 from . import board_instance
-from ._seeed_relay import Relay
 from .const import (
     CONF_I2C_ADDRESS,
     CONF_I2C_BUS,
@@ -23,6 +22,7 @@ from .const import (
     DEFAULT_I2C_BUS,
     DOMAIN,
 )
+from .seeed_relay import Relay
 
 _LOGGER = logging.getLogger(__name__)
 

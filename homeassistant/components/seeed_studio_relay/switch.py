@@ -8,8 +8,8 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from ._seeed_relay import Relay
 from .const import CONF_PIN_NAME, CONF_PIN_NUMBER
+from .seeed_relay import Relay
 
 _LOGGER = logging.getLogger(__name__)
 

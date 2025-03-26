@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import logging
 
-from _seeed_relay import Relay
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -13,6 +11,7 @@ from homeassistant.exceptions import ConfigEntryError
 
 from . import board_instance
 from .const import DEFAULT_I2C_BUS
+from .seeed_relay import Relay
 
 # For your initial PR, limit it to 1 platform.
 _PLATFORMS: list[Platform] = [Platform.SWITCH]
@@ -34,7 +33,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: PCFConfigEntry) -> bool:
             _LOGGER.error("Error setting up: %s", str(e))
             raise ConfigEntryError("Could not open i2c bus") from e
 
-    entry.runtime_data = board_instance.RELAY_INSTANCE
+    if isinstance(board_instance.RELAY_INSTANCE, Relay):
+        entry.runtime_data = board_instance.RELAY_INSTANCE
 
     await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
 

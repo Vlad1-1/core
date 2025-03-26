@@ -1,6 +1,6 @@
 """Global PCF8574 instance."""
 
-from _seeed_relay import Relay
+from .seeed_relay import Relay
 
 RELAY_INSTANCE: Relay | None = None
 
