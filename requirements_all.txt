@@ -2760,6 +2760,9 @@ slixmpp==1.8.5
 # homeassistant.components.smart_meter_texas
 smart-meter-texas==0.5.5
 
+# homeassistant.components.seeed_studio_relay
+smbus3==0.5.5
+
 # homeassistant.components.snapcast
 snapcast==2.3.6
 

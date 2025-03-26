@@ -1332,6 +1332,8 @@ build.json @home-assistant/supervisor
 /tests/components/search/ @home-assistant/core
 /homeassistant/components/season/ @frenck
 /tests/components/season/ @frenck
+/homeassistant/components/seeed_studio_relay/ @Vlad1-1
+/tests/components/seeed_studio_relay/ @Vlad1-1
 /homeassistant/components/select/ @home-assistant/core
 /tests/components/select/ @home-assistant/core
 /homeassistant/components/sense/ @kbickar

@@ -5586,6 +5586,12 @@
       "config_flow": true,
       "iot_class": "local_polling"
     },
+    "seeed_studio_relay": {
+      "name": "Seeed Studio Relay Board",
+      "integration_type": "hub",
+      "config_flow": true,
+      "iot_class": "calculated"
+    },
     "sendgrid": {
       "name": "SendGrid",
       "integration_type": "hub",

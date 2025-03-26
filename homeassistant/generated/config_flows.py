@@ -543,6 +543,7 @@ FLOWS = {
         "scrape",
         "screenlogic",
         "season",
+        "seeed_studio_relay",
         "sense",
         "sensibo",
         "sensirion_ble",

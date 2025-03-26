@@ -1,0 +1,10 @@
+{
+  "domain": "seeed_studio_relay",
+  "name": "Seeed Studio Relay Board",
+  "codeowners": ["@Vlad1-1"],
+  "config_flow": true,
+  "documentation": "https://www.home-assistant.io/integrations/pcf8574",
+  "iot_class": "calculated",
+  "quality_scale": "bronze",
+  "requirements": ["smbus3==0.5.5"]
+}
