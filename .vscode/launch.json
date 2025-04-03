@@ -74,7 +74,7 @@
       "request": "attach",
       "connect": {
         "port": 5678,
-        "host": "homeassistant.local"
+        "host": "192.168.1.2"
       },
       "pathMappings": [
         {
