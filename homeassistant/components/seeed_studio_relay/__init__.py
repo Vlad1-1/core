@@ -10,7 +10,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryError
 
 from . import board_instance
-from .const import DEFAULT_I2C_BUS
 from .seeed_relay import Relay
 
 # For your initial PR, limit it to 1 platform.
@@ -26,9 +25,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: PCFConfigEntry) -> bool:
 
     if not board_instance.is_configured():
         try:
-            board_instance.RELAY_INSTANCE = await hass.async_add_executor_job(
-                Relay, DEFAULT_I2C_BUS
-            )
+            board_instance.RELAY_INSTANCE = await hass.async_add_executor_job(Relay)
         except OSError as e:
             _LOGGER.error("Error setting up: %s", str(e))
             raise ConfigEntryError("Could not open i2c bus") from e

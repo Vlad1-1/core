@@ -1,6 +1,6 @@
 """Constants for the PCF8574 I/O Expander integration."""
 
-DOMAIN = "pcf8574"
+DOMAIN = "seeed_studio_relay"
 
 CONF_PIN_NAME = "pin_name"
 CONF_PIN_NUMBER = "pin_num"

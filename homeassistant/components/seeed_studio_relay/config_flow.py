@@ -8,11 +8,10 @@ from typing import Any
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 import homeassistant.helpers.config_validation as cv
 
-from . import board_instance
+# from . import board_instance
 from .const import (
     CONF_I2C_ADDRESS,
     CONF_I2C_BUS,
@@ -22,7 +21,8 @@ from .const import (
     DEFAULT_I2C_BUS,
     DOMAIN,
 )
-from .seeed_relay import Relay
+
+# from .seeed_relay import Relay
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,33 +45,33 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 )
 
 
-async def validate_input(hass: HomeAssistant, _data: dict[str, Any]) -> dict[str, Any]:
-    """Validate the user input allows us to connect.
+# async def validate_input(hass: HomeAssistant, _data: dict[str, Any]) -> dict[str, Any]:
+#     """Validate the user input allows us to connect.
 
-    Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
-    """
+#     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
+#     """
 
-    # If your PyPI package is not built with async, pass your methods
-    # to the executor:
-    # await hass.async_add_executor_job(
-    #     your_validate_func, data[CONF_USERNAME], data[CONF_PASSWORD]
-    # )
+#     # If your PyPI package is not built with async, pass your methods
+#     # to the executor:
+#     # await hass.async_add_executor_job(
+#     #     your_validate_func, data[CONF_USERNAME], data[CONF_PASSWORD]
+#     # )
 
-    if board_instance.is_configured():
-        return {"title": "Relay Board"}
+#     if board_instance.is_configured():
+#         return {"title": "Relay Board"}
 
-    try:
-        await hass.async_add_executor_job(Relay, DEFAULT_I2C_ADDRESS)
-    except OSError as e:
-        raise InvalidI2CBus from e
+#     try:
+#         await hass.async_add_executor_job(Relay, DEFAULT_I2C_ADDRESS)
+#     except OSError as e:
+#         raise InvalidI2CBus from e
 
-    # If you cannot connect:
-    # throw CannotConnect
-    # If the authentication is wrong:
-    # InvalidAuth
+#     # If you cannot connect:
+#     # throw CannotConnect
+#     # If the authentication is wrong:
+#     # InvalidAuth
 
-    # Return info that you want to store in the config entry.
-    return {"title": "Relay Board"}
+#     # Return info that you want to store in the config entry.
+#     return {"title": "Relay Board"}
 
 
 class PCFConfigFlow(ConfigFlow, domain=DOMAIN):
